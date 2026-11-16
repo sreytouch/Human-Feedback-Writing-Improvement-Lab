@@ -1,0 +1,683 @@
+
+
+Build a complete beginner-friendly portfolio project called AI Writing Improvement Lab.
+
+Goal
+
+Create an application that demonstrates how AI responses can be improved using human feedback.
+
+The system should generate multiple rewrites of a piece of text, allow humans to evaluate and rank those rewrites, store preference data, analyze what characteristics people prefer, and compare an original generation strategy against an improved generation strategy.
+
+The project should demonstrate:
+
+* supervised fine-tuning concepts
+* demonstrations
+* human preference data
+* RLHF concepts
+* response evaluation
+* reward signals
+* reward-model concepts
+* constraint following
+* iterative improvement
+* reward hacking
+* evaluation on unseen examples
+
+Do not implement large-scale PPO or real production RLHF.
+
+Instead, create an educational simulation of the workflow that is understandable and portfolio-ready.
+
+Technology Stack
+
+Use:
+
+* Python
+* Streamlit
+* OpenAI API
+* Pandas
+* SQLite
+* Matplotlib
+* scikit-learn where useful
+* python-dotenv
+* pytest
+
+Core Workflow
+
+The app should allow the user to enter:
+
+1. Original text
+2. Rewrite instruction
+3. Optional constraints
+
+Example:
+
+Original:
+“I need your answer today.”
+
+Instruction:
+“Make this more polite.”
+
+Constraint:
+“Do not change the deadline.”
+
+The app generates three candidate rewrites.
+
+For example:
+
+Response A:
+“Could you please provide your answer by the end of today?”
+
+Response B:
+“I would really appreciate receiving your response whenever you have time.”
+
+Response C:
+“Please answer today.”
+
+The evaluator then scores each response using a rubric.
+
+The evaluator ranks the candidates from best to worst.
+
+The evaluator explains why the best response is better.
+
+Save that data.
+
+Sample Tasks
+
+Include a sample-task library containing at least these examples:
+
+Original:
+“I need your answer today.”
+
+Instruction:
+Make this more polite.
+
+Constraint:
+Preserve the deadline.
+
+Original:
+“You forgot to send the file.”
+
+Instruction:
+Make this professional and non-accusatory.
+
+Original:
+“Your application is incomplete.”
+
+Instruction:
+Make this friendlier while keeping it concise.
+
+Original:
+“I disagree with your decision.”
+
+Instruction:
+Make this confident but respectful.
+
+Original:
+“Why haven’t you finished this yet?”
+
+Instruction:
+Rewrite this for a professional workplace Slack message.
+
+Original:
+“Call me ASAP.”
+
+Instruction:
+Make this polite while preserving urgency.
+
+Original:
+“Due to unforeseen circumstances, implementation of the aforementioned procedure has been temporarily postponed.”
+
+Instruction:
+Make this easier to understand without removing important information.
+
+Original:
+“We can’t give you a refund.”
+
+Instruction:
+Rewrite this for a customer using an empathetic tone.
+
+Constraint:
+Do not promise a refund or compensation.
+
+Original:
+“I wanted to reach out to see whether you might have some time available tomorrow to discuss the project.”
+
+Instruction:
+Shorten this.
+
+Constraint:
+Use fewer than 25 words and preserve the meaning.
+
+Original:
+“Participants are responsible for ensuring compliance with applicable eligibility requirements.”
+
+Instruction:
+Rewrite for a college-student audience using simple language.
+
+Allow the user to select a sample and automatically populate the form.
+
+Candidate Generation
+
+Generate three independent responses:
+
+* Candidate A
+* Candidate B
+* Candidate C
+
+The API prompt should tell the model to follow both the rewrite instruction and constraints.
+
+Generate candidates independently rather than asking for all three in one response.
+
+Make the OpenAI model configurable through:
+
+OPENAI_MODEL
+
+Use:
+
+OPENAI_API_KEY
+
+from .env.
+
+Do not hardcode credentials.
+
+Evaluation Rubric
+
+Score every candidate from 1 to 5 for:
+
+* Meaning Preservation
+* Instruction Following
+* Constraint Following
+* Clarity
+* Tone
+* Conciseness
+* Overall Quality
+
+Provide descriptions.
+
+Meaning Preservation:
+Does the rewrite retain the important meaning of the original?
+
+Instruction Following:
+Does it perform the requested transformation?
+
+Constraint Following:
+Does it respect explicit restrictions?
+
+Clarity:
+Is it easy to understand?
+
+Tone:
+Does it have the requested tone?
+
+Conciseness:
+Is it appropriately concise?
+
+Overall Quality:
+How successful is the rewrite overall?
+
+Ranking
+
+Ask the evaluator to rank:
+
+1st place
+2nd place
+3rd place
+
+Do not allow duplicate rankings.
+
+Ask:
+
+“Why did you choose the top response?”
+
+Provide a rationale text field.
+
+Also ask:
+
+“Did any response violate an important constraint?”
+
+Allow:
+
+* Candidate A
+* Candidate B
+* Candidate C
+* None
+
+If a candidate violated a constraint, provide an optional explanation field.
+
+Database
+
+Use SQLite.
+
+Store:
+
+* evaluation_id
+* timestamp
+* original_text
+* rewrite_instruction
+* constraints
+* candidate_a
+* candidate_b
+* candidate_c
+* candidate_a scores
+* candidate_b scores
+* candidate_c scores
+* first_place
+* second_place
+* third_place
+* rationale
+* constraint_violation_candidate
+* constraint_violation_explanation
+
+Create the database automatically.
+
+Streamlit Pages
+
+Home
+
+Explain the project using simple language.
+
+Explain how human demonstrations and rankings can help improve model behavior.
+
+Show workflow:
+
+Original Text
+↓
+Rewrite Instruction
+↓
+Generate Candidates
+↓
+Human Ranking
+↓
+Preference Dataset
+↓
+Analyze Weaknesses
+↓
+Improve Generation Strategy
+↓
+Evaluate Again
+
+Generate & Evaluate
+
+User enters original text, instruction, and constraints.
+
+Generate three candidates.
+
+Display them in three columns if screen size permits.
+
+Show evaluation rubric.
+
+Ask for ranking.
+
+Ask for rationale.
+
+Save evaluation.
+
+Dataset
+
+Display stored examples.
+
+Allow filtering.
+
+Allow CSV export.
+
+Allow viewing the full details of one evaluation.
+
+Analytics
+
+Calculate:
+
+* number of evaluations
+* percentage of times each candidate ranked first
+* average rubric score
+* most common weak criterion
+* number of constraint violations
+* constraint-violation rate
+* average meaning-preservation score
+* average instruction-following score
+
+Create Matplotlib charts.
+
+Do not use Seaborn.
+
+Preference Model
+
+Create a simple educational reward-model approximation.
+
+Construct pairwise training examples from rankings.
+
+For example, if:
+
+A > C > B
+
+create:
+
+A preferred over C
+A preferred over B
+C preferred over B
+
+Use rubric differences as model features.
+
+Train logistic regression with scikit-learn to predict which candidate humans prefer.
+
+Show:
+
+* training pair count
+* accuracy if enough data
+* coefficient importance
+* explanation of what the model learned
+
+Clearly state:
+
+“This is a simplified educational preference model, not a production RLHF reward model.”
+
+Improvement Experiment
+
+This is an important part of the project.
+
+Create two generation strategies:
+
+Baseline Strategy
+
+and
+
+Improved Strategy
+
+Baseline Strategy:
+Give the model only the original rewrite request.
+
+Improved Strategy:
+Use a stronger system prompt emphasizing:
+
+* preserve original meaning
+* satisfy every explicit constraint
+* use requested tone
+* avoid adding unsupported information
+* prioritize instruction following over unnecessary stylistic changes
+* verify the final answer against the user’s constraints before returning it
+
+Allow the user to run both strategies on the same new task.
+
+Generate:
+
+Baseline Response
+
+Improved Response
+
+Display both side by side.
+
+Ask the evaluator which is better.
+
+Save these comparison results separately.
+
+The purpose is to demonstrate:
+
+Evaluate
+→ identify weakness
+→ make targeted change
+→ evaluate again.
+
+Held-Out Evaluation
+
+Create a page called:
+
+“Improvement Test”
+
+Include at least 10 built-in evaluation prompts that are different from the examples used elsewhere.
+
+Use these as unseen/held-out examples.
+
+For each example:
+
+Generate one baseline response.
+
+Generate one improved response.
+
+Ask the user to select which is better.
+
+Track results.
+
+Calculate:
+
+Baseline win rate
+
+Improved win rate
+
+Tie rate
+
+Explain why evaluation on new examples is more informative than testing only on examples used to design the improvement.
+
+Reward Hacking Demo
+
+Create an interactive page explaining reward hacking.
+
+Use this example:
+
+Original:
+“I need your answer today.”
+
+Goal:
+Make the message more polite without changing the deadline.
+
+Candidate A:
+“Could you please send me your answer by the end of today?”
+
+Candidate B:
+“Whenever you have a chance, I would really appreciate hearing from you.”
+
+Create two hypothetical scoring systems.
+
+Scoring System 1:
+
+Politeness only.
+
+Scoring System 2:
+
+Politeness
+
+* meaning preservation
+* constraint following.
+
+Show how Candidate B might score very highly under politeness alone but fails the actual task because it removes the deadline.
+
+Explain:
+
+Optimizing an incomplete metric can improve the score while making actual task performance worse.
+
+Mention that reward hacking does not require the model to consciously cheat.
+
+Concepts Page
+
+Explain:
+
+* Pretraining
+* Post-training
+* Supervised Fine-Tuning
+* Demonstrations
+* Human Feedback
+* Preference Data
+* RLHF
+* Reward Model
+* Reward Signal
+* Evaluation
+* Reward Hacking
+* Held-Out Evaluation
+* Hill Climbing
+* Iterative Improvement
+
+Relate each term to the project.
+
+Suggested Project Structure
+
+ai-writing-feedback-lab/
+
+app.py
+
+pages/
+1_Generate_and_Evaluate.py
+2_Dataset.py
+3_Analytics.py
+4_Preference_Model.py
+5_Improvement_Experiment.py
+6_Improvement_Test.py
+7_Reward_Hacking.py
+8_Concepts.py
+
+src/
+init.py
+openai_client.py
+database.py
+generation.py
+evaluation.py
+preference_model.py
+analytics.py
+sample_tasks.py
+
+data/
+.gitkeep
+
+tests/
+test_database.py
+test_evaluation.py
+test_ranking.py
+
+README.md
+requirements.txt
+.env.example
+.gitignore
+
+You may improve the architecture where appropriate.
+
+Environment Variables
+
+Use:
+
+OPENAI_API_KEY=
+
+OPENAI_MODEL=
+
+Create .env.example.
+
+Add .env to .gitignore.
+
+Never expose API keys in Streamlit.
+
+Error Handling
+
+Handle:
+
+* missing API key
+* API request failure
+* empty user input
+* invalid ranking
+* missing scores
+* database errors where practical
+* insufficient examples for preference-model training
+
+Show user-friendly Streamlit messages rather than stack traces where possible.
+
+README
+
+Create a polished README including:
+
+* Project overview
+* Problem statement
+* Why human feedback matters
+* How the project works
+* Architecture
+* Technology stack
+* Installation
+* API setup
+* Usage
+* Evaluation rubric
+* Preference-data explanation
+* Preference-model explanation
+* Baseline vs improved experiment
+* Reward-hacking demonstration
+* Held-out testing
+* Limitations
+* Future improvements
+
+Include exact installation commands.
+
+Create virtual environment:
+
+python -m venv venv
+
+macOS/Linux:
+
+source venv/bin/activate
+
+Windows:
+
+venv\Scripts\activate
+
+Install:
+
+pip install -r requirements.txt
+
+Run:
+
+streamlit run app.py
+
+Tests
+
+Write tests for:
+
+* database initialization
+* saving evaluations
+* ranking validation
+* score calculations
+* preference pair construction
+* retrieving saved records
+
+Do not require live API calls during tests.
+
+Mock API logic if necessary.
+
+Code Quality
+
+Use:
+
+* modular Python
+* type hints where appropriate
+* docstrings
+* descriptive names
+* separation between UI and business logic
+* reusable functions
+
+Do not over-engineer.
+
+Do not leave unfinished TODOs or placeholder functions.
+
+Portfolio Quality
+
+The project should be presentable as a GitHub portfolio project for someone interested in AI evaluation, human feedback, RLHF, or AI fellowship work.
+
+The UI should look professional but remain simple.
+
+Use explanatory text throughout the application so a reviewer can understand what the project demonstrates.
+
+Final Verification
+
+Before finishing:
+
+1. Inspect every file.
+2. Check imports.
+3. Run tests.
+4. Fix failing tests.
+5. Confirm Streamlit launches.
+6. Confirm SQLite tables initialize.
+7. Confirm CSV export works.
+8. Confirm API errors are handled.
+9. Confirm README commands match the implementation.
+10. Remove unfinished placeholder code.
+
+At the end, provide:
+
+* summary of what you built
+* directory tree
+* installation commands
+* run commands
+* .env instructions
+* explanation of the main architecture
+* limitations
+* suggested future improvements
