@@ -2,7 +2,7 @@
 
 A beginner-friendly portfolio project for learning how human feedback can guide better AI writing. Generate three rewrites, score and rank them, collect preference data, then compare a basic generation strategy with a stronger one on separate tasks.
 
-![AI Writing Improvement Lab application overview](docs/images/application-overview.png)
+![AI Writing Improvement Lab application overview](docs/images/application-overview1.png)
 
 *AI-generated illustration of the application workflow; not a screenshot or measured experimental results. See the [generation prompts](docs/image-generation.md).*
 
